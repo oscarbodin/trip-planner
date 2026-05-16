@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trip Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&family=IBM+Plex+Mono:wght@400;500&family=Outfit:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #141210;
+      --bg-card:  #1c1916;
+      --gold:     #c9a052;
+      --gold-dim: #8a6c34;
+      --gold-glow:rgba(201,160,82,.1);
+      --cream:    #ede5d4;
+      --cream-dim:#a8998a;
+      --cream-faint:#5a5147;
+      --green:    #4a9e6e;
+      --green-bg: rgba(74,158,110,.12);
+      --red:      #c05050;
+      --red-bg:   rgba(192,80,80,.12);
+      --border:   rgba(201,160,82,.15);
+      --border-faint:rgba(255,255,255,.05);
+      --radius:   6px;
+      --font-serif: 'Cormorant Garamond', Georgia, serif;
+      --font-mono:  'IBM Plex Mono', monospace;
+      --font-sans:  'Outfit', sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--cream);
+      font-family: var(--font-sans);
+      font-weight: 300;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 4rem 1.5rem;
+    }
+
+    .back-link {
+      align-self: flex-start;
+      font-family: var(--font-mono);
+      font-size: .65rem;
+      letter-spacing: .12em;
+      color: var(--cream-faint);
+      text-decoration: none;
+      text-transform: uppercase;
+      margin-bottom: 2.5rem;
+      transition: color .15s;
+    }
+    .back-link:hover { color: var(--gold); }
+
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .page-label {
+      font-family: var(--font-mono);
+      font-size: .6rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: .5rem;
+    }
+
+    h1 {
+      font-family: var(--font-serif);
+      font-size: 2.4rem;
+      font-weight: 300;
+      color: var(--cream);
+    }
+
+    h1 em { font-style: italic; color: var(--gold); }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      width: 100%;
+      max-width: 520px;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-title {
+      font-family: var(--font-mono);
+      font-size: .65rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--cream-faint);
+      margin-bottom: 1.25rem;
+    }
+
+    label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: .65rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--cream-dim);
+      margin-bottom: .4rem;
+    }
+
+    input[type="password"],
+    input[type="text"] {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border-faint);
+      border-radius: var(--radius);
+      padding: .65rem .9rem;
+      color: var(--cream);
+      font-family: var(--font-mono);
+      font-size: .82rem;
+      outline: none;
+      transition: border-color .15s;
+      margin-bottom: 1.25rem;
+    }
+
+    input[type="password"]:focus,
+    input[type="text"]:focus {
+      border-color: var(--gold-dim);
+    }
+
+    /* Drop zone */
+    .drop-zone {
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color .2s, background .2s;
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+
+    .drop-zone:hover, .drop-zone.dragover {
+      border-color: var(--gold-dim);
+      background: var(--gold-glow);
+    }
+
+    .drop-zone input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+
+    .drop-icon {
+      font-size: 1.8rem;
+      margin-bottom: .6rem;
+      opacity: .5;
+    }
+
+    .drop-text {
+      font-family: var(--font-mono);
+      font-size: .72rem;
+      color: var(--cream-dim);
+      letter-spacing: .06em;
+    }
+
+    .drop-file-name {
+      font-family: var(--font-mono);
+      font-size: .75rem;
+      color: var(--gold);
+      margin-top: .5rem;
+    }
+
+    /* Submit button */
+    .btn-upload {
+      width: 100%;
+      background: var(--gold-glow);
+      border: 1px solid var(--gold-dim);
+      border-radius: var(--radius);
+      color: var(--gold);
+      font-family: var(--font-mono);
+      font-size: .75rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: .85rem;
+      cursor: pointer;
+      transition: background .15s, border-color .15s;
+    }
+
+    .btn-upload:hover:not(:disabled) {
+      background: rgba(201,160,82,.2);
+      border-color: var(--gold);
+    }
+
+    .btn-upload:disabled {
+      opacity: .4;
+      cursor: not-allowed;
+    }
+
+    /* Result box */
+    .result {
+      font-family: var(--font-mono);
+      font-size: .75rem;
+      padding: .85rem 1.1rem;
+      border-radius: var(--radius);
+      margin-top: 1rem;
+      display: none;
+      line-height: 1.55;
+    }
+
+    .result.success {
+      background: var(--green-bg);
+      border: 1px solid var(--green);
+      color: var(--green);
+      display: block;
+    }
+
+    .result.error {
+      background: var(--red-bg);
+      border: 1px solid var(--red);
+      color: var(--red);
+      display: block;
+    }
+
+    /* Schema reference */
+    .schema-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-mono);
+      font-size: .68rem;
+    }
+
+    .schema-table th {
+      text-align: left;
+      padding: .4rem .6rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--cream-faint);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      font-weight: 400;
+    }
+
+    .schema-table td {
+      padding: .4rem .6rem;
+      border-bottom: 1px solid var(--border-faint);
+      color: var(--cream-dim);
+    }
+
+    .schema-table tr:last-child td { border-bottom: none; }
+
+    .req { color: var(--gold); }
+    .opt { color: var(--cream-faint); }
+  </style>
+</head>
+<body>
+
+<a class="back-link" href="/">← back to itinerary</a>
+
+<header>
+  <p class="page-label">Admin</p>
+  <h1>Update <em>Itinerary</em></h1>
+</header>
+
+<div class="card">
+  <div class="card-title">Upload CSV</div>
+
+  <label for="secret">Admin secret</label>
+  <input type="password" id="secret" placeholder="your ADMIN_SECRET" autocomplete="current-password" />
+
+  <label>CSV file</label>
+  <div class="drop-zone" id="drop-zone">
+    <input type="file" id="file-input" accept=".csv,text/csv" />
+    <div class="drop-icon">📄</div>
+    <div class="drop-text">Drop CSV here or click to browse</div>
+    <div class="drop-file-name" id="file-name"></div>
+  </div>
+
+  <button class="btn-upload" id="upload-btn" disabled onclick="upload()">Upload & Replace All Stops</button>
+
+  <div class="result" id="result"></div>
+</div>
+
+<div class="card">
+  <div class="card-title">CSV Column Reference</div>
+  <table class="schema-table">
+    <thead>
+      <tr><th>Column</th><th>Example</th><th></th></tr>
+    </thead>
+    <tbody>
+      <tr><td>order</td><td>1</td><td class="req">required</td></tr>
+      <tr><td>name</td><td>Hotel Bellagio</td><td class="req">required</td></tr>
+      <tr><td>type</td><td>Hotel / Airbnb / Campsite</td><td class="opt">optional</td></tr>
+      <tr><td>address</td><td>Via Como 7, Italy</td><td class="opt">optional</td></tr>
+      <tr><td>checkin</td><td>2026-07-10 15:00</td><td class="opt">optional</td></tr>
+      <tr><td>checkout</td><td>2026-07-12 11:00</td><td class="opt">optional</td></tr>
+      <tr><td>nights</td><td>2</td><td class="opt">optional</td></tr>
+      <tr><td>cancellation_deadline</td><td>2026-07-05</td><td class="opt">optional</td></tr>
+      <tr><td>price</td><td>240</td><td class="opt">optional</td></tr>
+      <tr><td>currency</td><td>EUR / SEK / CHF</td><td class="opt">optional</td></tr>
+      <tr><td>payment_status</td><td>Paid / Pay on arrival / Partially paid</td><td class="opt">optional</td></tr>
+      <tr><td>booking_ref</td><td>BK-9284712</td><td class="opt">optional</td></tr>
+      <tr><td>booking_url</td><td>https://booking.com/…</td><td class="opt">optional</td></tr>
+      <tr><td>phone</td><td>+39 031 123456</td><td class="opt">optional</td></tr>
+      <tr><td>distance_to_next_km</td><td>85</td><td class="opt">optional</td></tr>
+      <tr><td>notes</td><td>Breakfast included</td><td class="opt">optional</td></tr>
+      <tr><td>image_url</td><td>https://…/photo.jpg</td><td class="opt">optional</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+  const fileInput = document.getElementById("file-input");
+  const dropZone  = document.getElementById("drop-zone");
+  const fileName  = document.getElementById("file-name");
+  const uploadBtn = document.getElementById("upload-btn");
+  const secretEl  = document.getElementById("secret");
+  const resultEl  = document.getElementById("result");
+
+  // Restore secret from sessionStorage
+  const saved = sessionStorage.getItem("admin_secret");
+  if (saved) secretEl.value = saved;
+
+  function checkReady() {
+    uploadBtn.disabled = !(fileInput.files.length > 0 && secretEl.value.trim());
+  }
+
+  fileInput.addEventListener("change", () => {
+    if (fileInput.files[0]) {
+      fileName.textContent = fileInput.files[0].name;
+    }
+    checkReady();
+  });
+
+  secretEl.addEventListener("input", () => {
+    sessionStorage.setItem("admin_secret", secretEl.value);
+    checkReady();
+  });
+
+  // Drag & drop styling
+  dropZone.addEventListener("dragover", e => { e.preventDefault(); dropZone.classList.add("dragover"); });
+  dropZone.addEventListener("dragleave", () => dropZone.classList.remove("dragover"));
+  dropZone.addEventListener("drop", e => {
+    e.preventDefault();
+    dropZone.classList.remove("dragover");
+    const file = e.dataTransfer.files[0];
+    if (file) {
+      const dt = new DataTransfer();
+      dt.items.add(file);
+      fileInput.files = dt.files;
+      fileName.textContent = file.name;
+      checkReady();
+    }
+  });
+
+  async function upload() {
+    const file   = fileInput.files[0];
+    const secret = secretEl.value.trim();
+    if (!file || !secret) return;
+
+    uploadBtn.disabled = true;
+    uploadBtn.textContent = "Uploading…";
+    resultEl.className = "result";
+
+    const form = new FormData();
+    form.append("file", file);
+
+    try {
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${secret}` },
+        body: form,
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        resultEl.className = "result success";
+        resultEl.textContent = `✓ Success — ${data.imported} stops imported. Reload the main page to see changes.`;
+      } else {
+        resultEl.className = "result error";
+        resultEl.textContent = `✗ Error: ${data.error || "Unknown error"}`;
+      }
+    } catch (err) {
+      resultEl.className = "result error";
+      resultEl.textContent = `✗ Network error: ${err.message}`;
+    } finally {
+      uploadBtn.disabled = false;
+      uploadBtn.textContent = "Upload & Replace All Stops";
+    }
+  }
+</script>
+
+</body>
+</html>
